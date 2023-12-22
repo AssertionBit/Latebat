@@ -7,6 +7,7 @@ name = "pypi"
 pypdf = "*"
 opencv-python = "*"
 pytesseract = "*"
+click = "*"
 
 [dev-packages]
 yapf = "*"
@@ -19,5 +20,6 @@ twine = "*"
 python_version = "3.9"
 python_full_version = "3.9.6"
 
-[pipenv]
-allow_prereleases = true
+
+[scripts]
+exec = "python3 -m lebata"
