@@ -19,6 +19,6 @@ type DocumentModel struct {
   Format      string    `json:"format"`
   Content     []byte
   BacktrackId string    `json:"backtrack-id"`
-  SubjectID   uint
+  SubjectModelID   uint
 }
 

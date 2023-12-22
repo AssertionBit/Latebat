@@ -14,6 +14,12 @@ func initSqliteDatabase() *gorm.DB {
     os.Exit(1)
   }
 
+  db.AutoMigrate(
+    &UserModel{}, 
+    &SubjectModel{},
+    &DocumentModel{}, 
+  )
+
   return db
 }
 

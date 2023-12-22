@@ -3,12 +3,16 @@ package http
 import (
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 )
 
+var db *gorm.DB
 var logger *zap.Logger
 
-func InitServer(l *zap.Logger) (*fiber.App) {
+
+func InitServer(l *zap.Logger, database *gorm.DB) (*fiber.App) {
   logger = l
+  db = database
   app := fiber.New()
   logger.Info("Initiating server")
 

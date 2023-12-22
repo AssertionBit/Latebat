@@ -8,9 +8,9 @@ import (
 
 func main() {
   logger, _ := zap.NewProduction()
-  _ = model.InitDatabase()
+  db := model.InitDatabase()
 
-  server := http.InitServer(logger)
+  server := http.InitServer(logger, db)
   server.Listen(":8080")
 }
 

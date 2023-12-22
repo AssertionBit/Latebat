@@ -9,3 +9,4 @@ type statusResponse struct {
 func statusGetEndpoint(ctx *fiber.Ctx) error {
   return ctx.JSON(statusResponse{Status: "normal"})
 }
+
