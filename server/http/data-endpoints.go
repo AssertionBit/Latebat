@@ -235,3 +235,10 @@ func documentDeleteEndpoint(ctx *fiber.Ctx) error {
   return ctx.SendStatus(200)
 }
 
+/// documentGeneralPostEndpoint function which represents general data
+/// reciving point for this service. Goal is to save and handle the data from
+/// end user.
+func documentGeneralPostEndpoint(ctx *fiber.Ctx) error {
+  return ctx.SendStatus(200)
+}
+

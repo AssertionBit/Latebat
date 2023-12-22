@@ -42,6 +42,9 @@ func InitServer(l *zap.Logger, database *gorm.DB) (*fiber.App) {
   app.Get("/api/v1/consumer", consumerAllGetEndpoint)
   app.Get("/api/v1/consumer/:subId", consumerGetEndpoint)
 
+  // 2.4 General endpoints
+  app.Post("/api/v1/upload", documentGeneralPostEndpoint)
+
   return app
 }
 
