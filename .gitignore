@@ -1,0 +1,31 @@
+# ---> Production files
+.env
+.env.*
+!.env.example
+
+# ---> MacOS
+.DS_Store
+
+# ---> Code editors
+.vscode
+.idea
+.vs
+
+# ---> Golang
+server/server
+server/main
+
+# ---> Runtime files
+*.log
+wal.txt
+
+# ---> Python
+dist
+build
+*.pyc
+
+# ---> JS/TS
+*.profile
+dist
+node_modules
+

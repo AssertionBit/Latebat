@@ -1,0 +1,23 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pypdf = "*"
+opencv-python = "*"
+pytesseract = "*"
+
+[dev-packages]
+yapf = "*"
+isort = "*"
+mypy = "*"
+build = "*"
+twine = "*"
+
+[requires]
+python_version = "3.9"
+python_full_version = "3.9.6"
+
+[pipenv]
+allow_prereleases = true
