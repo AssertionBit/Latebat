@@ -18,6 +18,8 @@ server/main
 # ---> Runtime files
 *.log
 wal.txt
+*.db
+.db
 
 # ---> Python
 dist
