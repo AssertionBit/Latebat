@@ -1,0 +1,12 @@
+[project]
+name = "lebatat"
+description = "Sub system for anonimazing data about client"
+version = "0.0.0"
+license = "MIT"
+author = [
+  { name = "AssertionBit", email = "assertionbit@icloud.com" }
+]
+dependencies = [
+  ""
+]
+

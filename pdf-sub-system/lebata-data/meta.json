@@ -1,0 +1,15 @@
+{
+  "wal": true,
+  "protected": {
+    "encryption":     true,
+    "encryption-key": "",
+    "signing":        true,
+    "signing-key":    ""
+  },
+  "system": {
+    "max-process": 5,
+    "logging": true,
+    "logging-stdout": true,
+    "logging-file": "pdf-process.log"
+  }
+}
