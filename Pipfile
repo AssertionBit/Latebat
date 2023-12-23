@@ -17,6 +17,7 @@ mypy = "*"
 build = "*"
 twine = "*"
 autopep8 = "*"
+pipenv = "*"
 
 [requires]
 python_version = "3.9"
