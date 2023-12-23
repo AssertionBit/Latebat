@@ -5,6 +5,8 @@ __all__ = (
     "PdfDocument"
 )
 
+from abc import ABC as _ABC
+from abc import abstractmethod as _abstractmethod
 from dataclasses import dataclass as _structure
 from typing import List as _List
 from typing import Union as _Union
@@ -15,12 +17,39 @@ from reportlab.lib.units import cm as _cm
 from reportlab.pdfgen.canvas import Canvas as _PdfCanvas
 
 
-class PdfText(object):
-    ...
+class Offset:
+    start_x: int
+    start_y: int
+    max_x:   int
+    max_y:   int
 
 
-class PdfImage(object):
-    ...
+class PdfObject(_ABC):
+    @_abstractmethod
+    def to_pdf_object(self,
+                      canvas: _PdfCanvas,
+                      offset_y: int) -> None:
+        ...
+
+
+class PdfText(PdfObject):
+    __content__: str
+
+    def __init__(self, text: str) -> None:
+        self.__content__ = text
+
+    def to_pdf_object(self, canvas: _PdfCanvas, offset_y: int) -> None:
+        ...
+
+
+class PdfImage(PdfObject):
+    __img__: str
+
+    def __init__(self, img_path: str) -> None:
+        self.__img__ = img_path
+
+    def to_pdf_object(self, canvas: _PdfCanvas, offset_y: int) -> None:
+        ...
 
 
 class PdfPage(object):
@@ -51,7 +80,8 @@ class PdfPage(object):
         @return Insertable and processable PDF page
         """
 
-        ...
+        for object in self.__page_objects__:
+            object.to_pdf_object(canvas)
 
 
 class PdfDocument(object):
