@@ -8,6 +8,7 @@ pypdf = "*"
 opencv-python = "*"
 pytesseract = "*"
 click = "*"
+reportlab = "*"
 
 [dev-packages]
 yapf = "*"
@@ -19,7 +20,6 @@ twine = "*"
 [requires]
 python_version = "3.9"
 python_full_version = "3.9.6"
-
 
 [scripts]
 exec = "python3 -m lebata"

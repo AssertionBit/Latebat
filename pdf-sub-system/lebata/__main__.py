@@ -3,7 +3,7 @@ from click import command
 from click import group
 from click import option
 
-from .pdf import process_pdf_file
+from .pdf import anonimize_pdf
 
 
 @group
@@ -16,7 +16,7 @@ def main() -> int:
 def process(file: str) -> None:
     if file.endswith(".pdf"):
         try:
-            process_pdf_file(file)
+            anonimize_pdf(file)
         except OSError:
             return
 
