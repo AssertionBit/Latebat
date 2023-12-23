@@ -1,11 +1,11 @@
-from os import environ as _environ
 from logging import DEBUG as _DEBUG_LVL
-from logging import INFO as _INFO_LVL
 from logging import ERROR as _ERROR_LVL
-from logging import StreamHandler as _StreamHandler
+from logging import INFO as _INFO_LVL
 from logging import Logger as _Logger
-from sys import stdout as _stdou
+from logging import StreamHandler as _StreamHandler
+from os import environ as _environ
 from sys import stderr as _stderr
+from sys import stdout as _stdou
 
 
 def getLogger() -> _Logger:
@@ -22,4 +22,3 @@ def getLogger() -> _Logger:
     logger.setLevel(_INFO_LVL)
 
     return logger
-
