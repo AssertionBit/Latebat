@@ -24,6 +24,7 @@ wal.txt
 # ---> Python
 dist
 build
+!BUILD
 *.pyc
 
 # ---> JS/TS
@@ -31,3 +32,5 @@ build
 dist
 node_modules
 
+# ---> Bazel
+bazel-*

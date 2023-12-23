@@ -1,0 +1,11 @@
+cc_library(
+    name="lib",
+    hdrs=[
+        "pdf.h",
+        "meta.h"
+    ],
+    srcs=[
+        "pdf.cc",
+    ],
+    visibility=["//visibility:public"],
+)

@@ -1,0 +1,24 @@
+cc_library(
+    name="libetat",
+    srcs=[
+        "lebetat.cc"
+    ],
+    hdrs=[
+        "lebetat.h"
+    ],
+    deps=[
+        "//libetat-pdf:lib"
+    ],
+    visibility=["//visibility:public"]
+)
+
+cc_binary(
+    name="lebetat-bin",
+    srcs=[
+        "main.cc"
+    ],
+    deps=[
+        ":libetat"
+    ],
+    visibility=["//visibility:private"]
+)
