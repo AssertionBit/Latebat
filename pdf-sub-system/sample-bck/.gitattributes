@@ -1,0 +1,10 @@
+snils-1.jpg filter=lfs diff=lfs merge=lfs -text
+snisl-2.jpg filter=lfs diff=lfs merge=lfs -text
+credit.pdf filter=lfs diff=lfs merge=lfs -text
+kred-dog-auto.pdf filter=lfs diff=lfs merge=lfs -text
+passport-1.jpg filter=lfs diff=lfs merge=lfs -text
+passport-2.jpg filter=lfs diff=lfs merge=lfs -text
+contract.pdf filter=lfs diff=lfs merge=lfs -text
+passport-0.jpg filter=lfs diff=lfs merge=lfs -text
+snils-0.jpg filter=lfs diff=lfs merge=lfs -text
+underline.pdf filter=lfs diff=lfs merge=lfs -text

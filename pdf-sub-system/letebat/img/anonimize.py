@@ -10,7 +10,7 @@ from cv2 import waitKey
 from cv2.typing import MatLike as _MatLike
 
 
-def process_passport(img: _MatLike) -> None:
+def process_passport(img: _MatLike) -> _MatLike:
     """
     """
 
@@ -98,8 +98,7 @@ def process_passport(img: _MatLike) -> None:
         -1
     )
 
-    imshow("", img)
-    waitKey(0)
+    return img
 
 
 def process_snils(img: _MatLike):
@@ -137,5 +136,4 @@ def process_snils(img: _MatLike):
         -1
     )
 
-    imshow("", img)
-    waitKey(0)
+    return img
