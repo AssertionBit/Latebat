@@ -1,0 +1,16 @@
+main {
+    background-color: var(--background-color);
+    min-height: 100vh;
+    overflow: hidden;
+    display: flex;
+}
+
+.contWrap {
+    background-color: var(--active-background);
+    padding: 20px;
+    margin: 20px;
+    width: 100%;
+    border-radius: 40px;
+    box-shadow: 20px 20px 39px #222222,
+               -20px -20px 39px #eeeeee10;
+}

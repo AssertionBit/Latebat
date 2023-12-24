@@ -5,6 +5,12 @@ import (
 	"go.uber.org/zap"
 )
 
+func DevCorsMiddleware(ctx *fiber.Ctx) error {
+  ctx.Response().Header.Add("Access-Control-Allow-Origin", "http://localhost:5173")
+
+  return ctx.Next()
+}
+
 func LoggingMiddleware(ctx *fiber.Ctx) error {
   logger.Info(
     "Retrieving new connection",

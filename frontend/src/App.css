@@ -1,6 +1,8 @@
 :root {
     --text-color: #eeeeee;
     --background-color: #333333;
+    --active-background: #2F2F2F;
+    --accent-color: #3676b2;
 }
 
 @media screen and (prefers-colorscheme: dark) {
@@ -11,4 +13,9 @@
 
 body {
     margin: 0;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    font-family: 'Montserrat';
+    font-size: 16px;
+    position: relative;
 }

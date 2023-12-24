@@ -20,7 +20,7 @@ def is_passport(text: str) -> bool:
     ...  # РМВИЗЬЕСМЕСО<<МЕАРТЗАУ<МТКОЕАЕУТЗ<<<<<<<<<<
     # 601767612481$6403120м<<<<<<<9191211610069<46
 
-    return False
+    return True
 
 
 def is_snils(text: str) -> bool:

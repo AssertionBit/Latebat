@@ -18,7 +18,5 @@ type DocumentModel struct {
   Status      DocumentT `json:"status"`
   Format      string    `json:"format"`
   Content     []byte
-  BacktrackId string    `json:"backtrack-id"`
-  SubjectModelID   uint
 }
 

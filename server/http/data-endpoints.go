@@ -117,48 +117,7 @@ func userGetEndpoint(ctx *fiber.Ctx) error {
 /// Return:
 ///   JSON object when possible 
 func subjectGetEndpoint(ctx *fiber.Ctx) error {
-  var possibleSubject model.SubjectModel
-
-  id, err := ctx.ParamsInt("id", -1)
-  if err != nil {
-    logger.Warn(
-      "Malformed path param (possibly missing)",
-      zap.String("Request-type", "retrieve single subject"),
-    )
-  }
-
-  // Seaching for single subject, error means not exists
-  if err := db.Model(&model.SubjectModel{}).Where("id = ?", id).First(&possibleSubject).Error; err != nil {
-    logger.Info(
-      "User not found with such id", 
-      zap.Int("Subject-Id", id),
-      zap.String("Request-type", "retrieve single subject"),
-    )
-
-    return ctx.SendStatus(404)
-  }
-
-  // Processing for response
-  data := subjectResponseFullT{
-    Name: "",
-    Documents: []documentResponseT{},
-  }
-
-  for _, doc := range possibleSubject.DocumentModels {
-    data.Documents = append(data.Documents, documentResponseT{
-      Id: doc.ID,
-      BacktrackID: doc.BacktrackId,
-      Name: doc.Name,
-      Status: doc.Status,
-    })
-  }
-
-  if res, err := json.Marshal(&data); err != nil {
-    return ctx.SendStatus(500)
-  } else {
-    _ = ctx.SendStatus(200)
-    return ctx.Send(res)
-  }
+  return ctx.SendStatus(404)
 }
 
 /// subjectsAllGetEndpoint function retrieves all subjects
@@ -169,45 +128,75 @@ func subjectGetEndpoint(ctx *fiber.Ctx) error {
 /// Params:
 ///   ctx - Context for request/response from fiber.
 func subjectsAllGetEndpoint(ctx *fiber.Ctx) error {
-  var subjects []model.SubjectModel = make([]model.SubjectModel, 0)
-
-  if err := db.Model(&model.SubjectModel{}).Find(&subjects).Error; err != nil {
-    logger.Info("No users found, returning empty array")
-    if res, err := json.Marshal(&subjects); err != nil {
-      return ctx.SendStatus(500)
-    } else {
-      return ctx.Send(res)
-    }
-  }
-
-  var subjectRespo []subjectResponseT = make([]subjectResponseT, 0)
-
-  logger.Info("Processing all subjects", zap.Int("Length", len(subjects)))
-  for _, subj := range subjects {
-    docId := make([]uint, 0)
-    for _, doc := range subj.DocumentModels {
-      docId = append(docId, doc.ID)
-    }
-
-    subjectRespo = append(subjectRespo, subjectResponseT{
-      Name: "",
-      DocumentID: docId,
-    })
-  }
-
-  logger.Info(
-    "Processed data succesfully", 
-    zap.String("Request-type", "Retreiving all subjects"),
-  )
-  if res, err := json.Marshal(subjectRespo); err != nil {
-    return ctx.SendStatus(500)
-  } else {
-    _ = ctx.SendStatus(200)
-    return ctx.Send(res)
-  }
+  return ctx.SendStatus(404)
 }
 
 func subjectPostEndpoint(ctx *fiber.Ctx) error {
+  // ctx.Accepts("image/png")
+  // ctx.Accepts("image/jpeg")
+  // ctx.Accepts("application/pdf")
+  ctx.AcceptsEncodings("utf-8")
+
+  logger.Info(
+    "Accepting new multipart request",
+  )
+  form, err := ctx.MultipartForm()
+
+  if err != nil {
+    logger.Error(
+      "Request failed to be processed",
+      zap.Error(err),
+    )
+    return ctx.SendStatus(500)
+  }
+
+  for _, formHeader := range form.File {
+  
+    for _, fileHeader := range formHeader {
+      fileRaw, err := fileHeader.Open()
+      if err != nil {
+        logger.Warn(
+          "Failed to open file",
+        zap.String("File-Type", fileHeader.Header.Get("Content-Type")),
+          zap.String("File-Name", fileHeader.Filename),
+        )
+        continue
+      }
+      var fileCont []byte
+      if _, err := fileRaw.Read(fileCont); err != nil {
+        logger.Warn(
+          "Failed to open file",
+          zap.String("File-Type", fileHeader.Header.Get("Content-Type")),
+          zap.String("File-Name", fileHeader.Filename),
+        )
+        continue
+      }
+
+      file := model.DocumentModel{
+    Status: model.Accepted,
+    Format: fileHeader.Header.Get("Content-Type"),
+    Content: fileCont,
+  }
+
+  // IF error, data will not be saved
+  if err := db.Create(&file).Commit().Error; err != nil {
+    logger.Warn(
+      "File failed to be saved",
+      zap.ByteString("Content-Type", ctx.Request().Header.ContentType()),
+      zap.Error(err),
+    )
+
+    return ctx.SendStatus(500)
+  }
+
+  logger.Info(
+    "File accepted and will be processed",
+    zap.String("Content-Type", file.Format),
+    zap.Int("Size", int(len(file.Content))),
+  )
+}
+  }
+
   return ctx.SendStatus(200)
 }
 
@@ -220,11 +209,89 @@ func documentGetEndpoint(ctx *fiber.Ctx) error {
 }
 
 func documentGetAllEndpoint(ctx *fiber.Ctx) error {
-  return ctx.SendStatus(200)
+  data := make([]fiber.Map, 0)
+
+  var dbData []model.DocumentModel
+  if err := db.Model(&model.DocumentModel{}).Find(&dbData).Error; err != nil {
+    logger.Warn(
+      "No data found in database, nothing will be returnder",
+    )
+  } else {
+    for _, mod := range dbData {
+      data = append(data, fiber.Map{
+        "name": "",
+        "status": mod.Status,
+        "format": mod.Format,
+      })
+    }
+  }
+
+  if data, err := json.Marshal(data); err != nil {
+    return ctx.SendStatus(500)
+  } else {
+    return ctx.Send(data)
+  }
 }
 
 func documentPostEndpoint(ctx *fiber.Ctx) error {
-  return ctx.SendStatus(200)
+  ctx.Accepts("multipart/form-data")
+
+  logger.Info(
+    "Accepting new connection",
+  )
+
+  file, err := ctx.FormFile("file")
+
+  if err != nil {
+    logger.Error(
+      "Error handling file from request",
+      zap.Error(err),
+    )
+    return ctx.SendStatus(500)
+  }
+
+  rawFile, err := file.Open()
+  if err != nil {
+    logger.Error(
+      "Error handling file from request",
+      zap.Error(err),
+    )
+    return ctx.SendStatus(500)
+  }
+
+  body := make([]byte, 15000)
+  if n, err := rawFile.Read(body); err != nil {
+      logger.Error(
+        "Error handling file from request",
+        zap.Error(err),
+      )
+      return ctx.SendStatus(500)
+  } else {
+    logger.Info(
+      "Info attempting saving file to database",
+      zap.Int("Size", n),
+      zap.String("Content-Type", file.Header.Get("Content-Type")),
+      zap.String("File-Name", file.Filename),
+    )
+  }
+
+  fileDto := model.DocumentModel{
+    Status: model.Accepted,
+    Format: file.Header.Get("Content-Type"),
+    Content: body,
+  }
+
+  if err := db.Create(&fileDto).Error; err != nil {
+    logger.Warn(
+      "Error saving file in database",
+      zap.String("Content-Type", fileDto.Format),
+      zap.Error(err),
+    )
+
+    return ctx.SendStatus(500)
+  }
+
+  return ctx.RedirectBack("/")
 }
 
 func documentUpdateEndpoint(ctx *fiber.Ctx) error {

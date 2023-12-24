@@ -1,0 +1,36 @@
+aside {
+    background-color: var(--active-background);
+    box-shadow: 10px 10px 19px #22222225, -10px -10px 19px #eeeeee10;
+    border-radius: 20px;
+    padding: 20px;
+    margin: 20px;
+    max-height: auto;
+}
+
+.navLink {
+    color: var(--text-color);
+    text-decoration: none;
+    transition: 200ms ease-in-out;
+    display: block;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    background-color: var(--active-background);
+    color: var(--text-color);
+
+    &:hover {
+        box-shadow: 10px 10px 19px #22222250,
+                   -10px -10px 19px #eeeeee10;
+    }
+
+    &:active {
+        box-shadow: inset 10px 10px 19px #22222250,
+                    inset -10px -10px 19px #eeeeee10;        
+    }
+
+    &.selected {
+        color: var(--accent-color);
+        box-shadow: inset 10px 10px 19px #22222250,
+                    inset -10px -10px 19px #eeeeee10;
+    }
+}

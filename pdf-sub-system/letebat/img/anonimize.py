@@ -98,6 +98,9 @@ def process_passport(img: _MatLike) -> None:
         -1
     )
 
+    imshow("", img)
+    waitKey(0)
+
 
 def process_snils(img: _MatLike):
     img = _resize(img, (1000, 750), interpolation=_AREA)

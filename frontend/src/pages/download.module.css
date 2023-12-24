@@ -1,0 +1,33 @@
+.btn {
+    display: block;
+    margin-top: 15px;
+    width: 100%;
+    border: none;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    transition: 200ms ease-in-out;
+    box-shadow: 5px 5px 9px #22222250,
+               -5px -5px 9px #efefef25;
+
+    &:hover {
+        border-radius: 50px;
+        color: var(--accent-color);
+    }
+
+    &:active {
+        color: var(--accent-color);
+        box-shadow: 0 0 0 #22222250,
+                    0 0 0 #efefef25,
+                    5px 5px 9px #22222250 inset,
+                   -5px -5px 9px #efefef25 inset;
+    }
+
+    &:focus {
+        color: var(--accent-color);
+        border: 1px solid inset var(--accent-color);
+        outline: none;
+    }
+}
