@@ -205,7 +205,25 @@ func subjectsDeleteEndpoint(ctx *fiber.Ctx) error {
 }
 
 func documentGetEndpoint(ctx *fiber.Ctx) error {
-  return ctx.SendStatus(200)
+  id, err := ctx.ParamsInt("docId", -1)
+  logger.Info(
+    "Sending image",
+    zap.Int("ID", id),
+  )
+  if err != nil {
+    logger.Warn("Error")
+    return ctx.SendStatus(400)
+  }
+
+  var doc model.DocumentModel
+
+  if err := db.Model(&model.DocumentModel{}).Where("id = ?", id).First(&doc).Error; err != nil {
+    return ctx.SendStatus(404)
+  }
+ 
+  logger.Info("Sending file", zap.Int("ID", id))
+  ctx.Response().Header.Set("Content-Type", doc.Format)
+  return ctx.Send(doc.Content)
 }
 
 func documentGetAllEndpoint(ctx *fiber.Ctx) error {
@@ -219,7 +237,8 @@ func documentGetAllEndpoint(ctx *fiber.Ctx) error {
   } else {
     for _, mod := range dbData {
       data = append(data, fiber.Map{
-        "name": "",
+        "id": mod.ID,
+        "name": mod.Name,
         "status": mod.Status,
         "format": mod.Format,
       })
@@ -259,7 +278,7 @@ func documentPostEndpoint(ctx *fiber.Ctx) error {
     return ctx.SendStatus(500)
   }
 
-  body := make([]byte, 15000)
+  body := make([]byte, 150000)
   if n, err := rawFile.Read(body); err != nil {
       logger.Error(
         "Error handling file from request",
@@ -276,6 +295,7 @@ func documentPostEndpoint(ctx *fiber.Ctx) error {
   }
 
   fileDto := model.DocumentModel{
+    Name: file.Filename,
     Status: model.Accepted,
     Format: file.Header.Get("Content-Type"),
     Content: body,

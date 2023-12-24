@@ -13,6 +13,7 @@ export enum EDocumentState {
 }
 
 export interface IDocument {
+    id: number;
     name: string;
     format: string;
     type: EDocumentType;

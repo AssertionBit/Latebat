@@ -24,16 +24,27 @@ export default (props: IDocumentItemProps, key: number): React.JSX.Element => {
 
     return (
         <>
-            <div key={`${key}`} onClick={() => setClicked(!clicked)}
+            <div key={`${key}`}
                  className={style.wrapper}>
                 <h3 className={style.itemName}>{props.name}#{props.id}</h3>
                 <Badge text={props.type}/><Badge text={props.status}/>
-                <button className={style.itemOpener}>Open info</button>
+                
+                {props.type == "application/pdf" ?
+                      <a 
+                        className={style.itemOpener}
+                        href={`#`}
+                        onClick={() => {
+                            window.open(`http://localhost:8080/api/v1/docs/${props.id}`, '_blank', 'fullscreen=yes'); return false;
+                        }}>Open info</a>
+                    : <button 
+                        onClick={() => setClicked(!clicked)}
+                        className={style.itemOpener}>Open info</button>
+                }
             </div>
 
             {clicked && <dialog className={style.dialog}>
                 <form method="dialog">
-                    <h2>He</h2>
+                    <img src={`http://localhost:8080/api/v1/docs/${props.id}`} />
                     <button 
                         className={style.formCloseBtn}
                         onClick={() => setClicked(!clicked)}>

@@ -26,7 +26,7 @@ func InitServer(l *zap.Logger, database *gorm.DB) (*fiber.App) {
 
   // 2.2 Subject documents
   app.Get("/api/v1/docs/", documentGetAllEndpoint)
-  app.Get("/api/v1/docs/:docId:", documentGetEndpoint)
+  app.Get("/api/v1/docs/:docId", documentGetEndpoint)
   app.Post("/api/v1/docs/", documentPostEndpoint)
   app.Delete("/api/v1/docs/", documentDeleteEndpoint)
   app.Post("/api/v1//docs/:docId", documentUpdateEndpoint)

@@ -8,6 +8,7 @@ from re import findall as _findall
 from typing import Optional as _Optional
 
 from cv2 import COLOR_BGR2GRAY
+from cv2.dnn_superres import DnnSuperResImpl as _SuperResImpl
 from cv2 import cvtColor as _conver_color
 from cv2 import filter2D as _filter
 from cv2 import imread as _cv_read
@@ -22,7 +23,6 @@ from .anonimize import process_passport as _passport_proc
 from .anonimize import process_snils as _process_snils
 from .type import ImageType as _Type
 
-
 def is_passport(text: str) -> bool:
     markers = 0
 
@@ -32,38 +32,49 @@ def is_passport(text: str) -> bool:
     )
 
     if text.count("паспорт выдан") != 0:
-        markers += 1
+       markers += 2
 
     for pattern in patterns:
         print(pattern)
         if _findall(pattern, text, _MULTILINE) is not None:
             markers += 1
 
-    return markers != 0
+    return markers 
 
 
-def is_snils(text: str) -> bool:
-    if text.count("страховое свидетельство") != 0:
-        return True
+def is_snils(text: str):
+    m = 0
+
+    if text.count("страховое") != 0 or text.count("свидетельство") != 0:
+        m += 10
 
     patterns = (
         r"([\-0-9]+)",
     )
 
-    markers = 0
     for pattern in patterns:
         if _findall(pattern, text, _MULTILINE) != 0:
-            markers += 1
+            m += 1
 
-    return markers > 0
+    return m
 
 
 def detect_type(text: str) -> _Type:
-    for t, c in {_Type.snils: is_snils, _Type.passport: is_passport}.items():
-        if c(text):
-            return t
+    results = {}
 
-    return _Type.passport
+    for t, c in {_Type.snils: is_snils, _Type.passport: is_passport}.items():
+        if (m := c(text)) != 0:
+            print(f"{t}: {m}")
+            results[m] = t
+
+    max = -1
+    max_i = 0
+    for i, c in enumerate(results.keys()):
+        if max < c:
+            max = c
+            max_i = i
+
+    return results[max]
 
 
 def read_image(file: str) -> _MatLike:
@@ -74,6 +85,12 @@ def read_image(file: str) -> _MatLike:
 
 def process_image(file: str, type: _Optional[_Type] = None) -> None:
     cv_f = read_image(file)
+
+    sr = _SuperResImpl.create()
+    sr.readModel("letebat-data/FSRCNN_x3.pb")
+    sr.setModel("fsrcnn", 3)
+
+    cv_f = sr.upsample(cv_f)
 
     rgb_cv_f = _conver_color(cv_f, COLOR_BGR2GRAY)
 
@@ -87,10 +104,12 @@ def process_image(file: str, type: _Optional[_Type] = None) -> None:
 
     if type is None:
         type = detect_type(text)
+    print(type)
 
     if type == _Type.passport:
         rgb_cv_f = _passport_proc(rgb_cv_f)
 
     if type == _Type.snils:
         rgb_cv_f = _process_snils(rgb_cv_f)
-        _imwrite(file, rgb_cv_f)
+    
+    _imwrite(file, rgb_cv_f)
